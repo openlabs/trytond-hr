@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<form string="Department">
+    <label name="name"/>
+    <field name="name"/>
+    <label name="active"/>
+    <field name="active"/>
+    <label name="company"/>
+    <field name="company"/>
+    <label name="parent"/>
+    <field name="parent"/>
+</form>

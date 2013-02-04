@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<tree string="Departments">
+    <field name="name"/>
+    <field name="company"/>
+    <field name="parent"/>
+</tree>
