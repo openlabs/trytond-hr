@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+        <record model="ir.ui.view" id="attendance_view_list">
+            <field name="model">employee.attendance</field>
+            <field name="type">tree</field>
+            <field name="priority">10</field>
+            <field name="name">attendance_list</field>
+        </record>
+
+        <record model="ir.ui.view" id="attendance_view_form">
+            <field name="model">employee.attendance</field>
+            <field name="type">form</field>
+            <field name="priority">20</field>
+            <field name="name">attendance_form</field>
+        </record>
+        <record model="ir.action.act_window" id="act_attendance_list">
+            <field name="name">Attendance</field>
+            <field name="res_model">employee.attendance</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_attendance_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="attendance_view_list"/>
+            <field name="act_window" ref="act_attendance_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_attendance_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="attendance_view_form"/>
+            <field name="act_window" ref="act_attendance_list"/>
+        </record>
+
+        <menuitem name="Attendance" parent="menu_hr"
+            sequence="10" id="menu_hr_attendance" />
+
+        <menuitem parent="menu_hr_attendance" sequence="10"
+            action="act_attendance_list" id="menu_attendance_list"/>
+
+    </data>
+</tryton>

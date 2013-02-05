@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+
+        <!-- Payroll Periods -->
+        <record model="ir.ui.view" id="payroll_period_view_list">
+            <field name="model">payroll.period</field>
+            <field name="type">tree</field>
+            <field name="priority">10</field>
+            <field name="name">payroll_period_list</field>
+        </record>
+        <record model="ir.ui.view" id="payroll_period_view_form">
+            <field name="model">payroll.period</field>
+            <field name="type">form</field>
+            <field name="priority">20</field>
+            <field name="name">payroll_period_form</field>
+        </record>
+        <record model="ir.action.act_window" id="act_payroll_period_list">
+            <field name="name">Payroll Periods</field>
+            <field name="res_model">payroll.period</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_payroll_period_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="payroll_period_view_list"/>
+            <field name="act_window" ref="act_payroll_period_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_payroll_period_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="payroll_period_view_form"/>
+            <field name="act_window" ref="act_payroll_period_list"/>
+        </record>
+        <menuitem name="Human Resource" sequence="10" id="menu_hr"
+            icon="tryton-party"/>
+
+        <menuitem name="Configuration" parent="menu_hr"
+            sequence="10" id="menu_hr_configuration" />
+
+        <menuitem parent="menu_hr_configuration" sequence="10"
+            action="act_payroll_period_list" id="menu_payroll_periods"/>
+
+        <!-- Payroll Holidays -->
+        <record model="ir.ui.view" id="payroll_holiday_view_list">
+            <field name="model">payroll.holiday</field>
+            <field name="type">tree</field>
+            <field name="priority">10</field>
+            <field name="name">payroll_holiday_list</field>
+        </record>
+        <record model="ir.ui.view" id="payroll_holiday_view_form">
+            <field name="model">payroll.holiday</field>
+            <field name="type">form</field>
+            <field name="priority">20</field>
+            <field name="name">payroll_holiday_form</field>
+        </record>
+
+    </data>
+</tryton>

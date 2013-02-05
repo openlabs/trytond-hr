@@ -7,6 +7,8 @@
 """
 from trytond.pool import Pool
 from .company import *
+from .payroll import *
+from .attendance import *
 
 
 def register():
@@ -18,4 +20,8 @@ def register():
         Skill,
         Team,
         StaffDetails,
+        PayrollPeriod,
+        PayrollHoliday,
+        Attendance,
+        AttendanceSummary,
         module='hr', type_='model')
