@@ -12,4 +12,10 @@ from .company import *
 def register():
     Pool.register(
         Department,
+        Responsibility,
+        Language,
+        Academics,
+        Skill,
+        Team,
+        StaffDetails,
         module='hr', type_='model')

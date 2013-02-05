@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<form string="Academics">
+    <label name="institution"/>
+    <field name="institution"/>
+    <label name="major"/>
+    <field name="major"/>
+    <label name="level"/>
+    <field name="level"/>
+    <label name="year"/>
+    <field name="year"/>
+    <label name="percentage"/>
+    <field name="percentage"/>
+</form>
