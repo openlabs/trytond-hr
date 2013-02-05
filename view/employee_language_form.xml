@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<form string="Language">
+    <label name="language"/>
+    <field name="language"/>
+    <label name="mother_tounge"/>
+    <field name="mother_tounge"/>
+    <group id="check boxes" col="6" colspan="4">
+        <label name="read"/>
+        <field name="read"/>
+        <label name="write"/>
+        <field name="write"/>
+        <label name="speak"/>
+        <field name="speak"/>
+    </group>
+</form>
