@@ -7,9 +7,15 @@
 """
 from trytond.pool import Pool
 from .company import *
+from .payroll import *
+from .attendance import *
 
 
 def register():
     Pool.register(
         Department,
+        PayrollPeriod,
+        PayrollHoliday,
+        Attendance,
+        AttendanceSummary,
         module='hr', type_='model')
