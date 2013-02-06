@@ -10,7 +10,7 @@ from trytond.pyson import Eval, Bool
 from trytond.pool import Pool
 __all__ = [
     'Department', 'Responsibility', 'Language', 'Academics',
-    'StaffDetails', 'Skill', 'Team',
+    'StaffDetails', 'Skill', 'Team', 'TransferProposal', 'TransferRemark',
 ]
 
 STATES = {
@@ -228,6 +228,10 @@ class StaffDetails(ModelSQL, ModelView):
     team = fields.One2Many(
         'company.employee.team', 'employee', 'Team'
     )
+    transfers = fields.One2Many(
+        'employee.transfer.proposal', 'employee',
+        'Promotion / Transfer Proposals'
+    )
 
     @staticmethod
     def default_state():
@@ -279,3 +283,51 @@ class StaffDetails(ModelSQL, ModelView):
 
         for record in records:
             Party.write([record.party], {'contact_mechanisms': value})
+
+
+class TransferProposal(ModelSQL, ModelView):
+    "Employee Promotion and Transfer Proposal"
+    __name__ = 'employee.transfer.proposal'
+    _rec_name = 'employee'
+
+    employee = fields.Many2One(
+        'company.employee.staff_details', 'Employee', required=True
+    )
+    proposed_center = fields.Char(
+        'Proposed Project Center / Office', required=True
+    )
+    proposed_allowance = fields.Numeric('Proposed Allowance', required=True)
+    proposed_doj = fields.Date('Proposed Date of Joining', required=True)
+    remarks = fields.One2Many(
+        'employee.transfer.remark', 'proposal', 'Remarks'
+    )
+
+
+class TransferRemark(ModelSQL, ModelView):
+    "Employe Transfer Remark"
+    __name__ = 'employee.transfer.remark'
+    _rec_name = 'proposal'
+
+    employee = fields.Many2One(
+        'company.employee', 'Employee', required=True
+    )
+    proposal = fields.Many2One(
+        'employee.transfer.proposal', 'Proposal', required=True
+    )
+    date = fields.Date('Date', required=True)
+    comment = fields.Text('Comment')
+    remark = fields.Selection([
+        ('recommended', 'Recommended'),
+        ('not_recommended', 'Not Recommended'),
+        ('average', 'Average'),
+        ('rejected', 'Rejected')
+    ], 'Remark', required=True)
+
+    @staticmethod
+    def default_remark():
+        return 'recommended'
+
+    @staticmethod
+    def default_date():
+        Date = Pool().get('ir.date')
+        return Date.today()

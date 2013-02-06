@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<tree string="Promotion / Tranfer Proposals">
+    <field name="employee"/>
+    <field name="proposed_center"/>
+    <field name="proposed_allowance"/>
+    <field name="proposed_doj"/>
+</tree>

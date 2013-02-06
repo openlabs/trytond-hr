@@ -82,5 +82,29 @@
             <field name="name">employee_academics_form</field>
         </record>
 
+        <record model="ir.ui.view" id="transfer_proposal_view_list">
+            <field name="model">employee.transfer.proposal</field>
+            <field name="type">tree</field>
+            <field name="priority">10</field>
+            <field name="name">employee_transfer_list</field>
+        </record>
+        <record model="ir.ui.view" id="transfer_proposal_view_form">
+            <field name="model">employee.transfer.proposal</field>
+            <field name="type">form</field>
+            <field name="name">employee_transfer_form</field>
+        </record>
+
+        <record model="ir.ui.view" id="transfer_remark_view_list">
+            <field name="model">employee.transfer.remark</field>
+            <field name="type">tree</field>
+            <field name="priority">10</field>
+            <field name="name">employee_transfer_remark_list</field>
+        </record>
+        <record model="ir.ui.view" id="transfer_remark_view_form">
+            <field name="model">employee.transfer.remark</field>
+            <field name="type">form</field>
+            <field name="name">employee_transfer_remark_form</field>
+        </record>
+
     </data>
 </tryton>

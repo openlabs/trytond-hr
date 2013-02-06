@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<form string="Promotion / Tranfer Remarks">
+    <label name="employee"/>
+    <field name="employee"/>
+    <label name="proposal"/>
+    <field name="proposal"/>
+    <label name="date"/>
+    <field name="date"/>
+    <separator name="comment" colspan="4"/>
+    <field name="comment" colspan="4"/>
+    <label name="remark"/>
+    <field name="remark" colspan="3"/>
+</form>
+
