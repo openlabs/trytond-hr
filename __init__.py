@@ -19,6 +19,8 @@ def register():
         Academics,
         Skill,
         Team,
+        TransferProposal,
+        TransferRemark,
         StaffDetails,
         PayrollPeriod,
         PayrollHoliday,

@@ -78,5 +78,8 @@
             <field name="responsibilities"/>
             <field name="team"/>
         </page>
+        <page string="Promotions and Transfers" id="transfers">
+            <field name="transfers" colspan="4"/>
+        </page>
     </notebook>
 </form>

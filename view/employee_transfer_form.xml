@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<form string="Promotion / Tranfer Proposal">
+    <label name="proposed_company"/>
+    <field name="proposed_company"/>
+    <label name="proposed_department"/>
+    <field name="proposed_department"/>
+    <label name="proposed_allowance"/>
+    <field name="proposed_allowance"/>
+    <label name="proposed_doj"/>
+    <field name="proposed_doj"/>
+    <label name="employee"/>
+    <field name="employee"/>
+    <newline/>
+    <field name="remarks" colspan="4"/>
+</form>
