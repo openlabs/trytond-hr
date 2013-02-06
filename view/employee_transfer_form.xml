@@ -1,7 +1,9 @@
 <?xml version="1.0"?>
 <form string="Promotion / Tranfer Proposal">
-    <label name="proposed_center"/>
-    <field name="proposed_center"/>
+    <label name="proposed_company"/>
+    <field name="proposed_company"/>
+    <label name="proposed_department"/>
+    <field name="proposed_department"/>
     <label name="proposed_allowance"/>
     <field name="proposed_allowance"/>
     <label name="proposed_doj"/>

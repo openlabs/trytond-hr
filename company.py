@@ -293,8 +293,13 @@ class TransferProposal(ModelSQL, ModelView):
     employee = fields.Many2One(
         'company.employee.staff_details', 'Employee', required=True
     )
-    proposed_center = fields.Char(
-        'Proposed Project Center / Office', required=True
+    proposed_company = fields.Many2One(
+        'company.company', 'Proposed Company', required=True
+    )
+    proposed_department = fields.Many2One(
+        'company.department', 'Proposed Department', domain=[
+            ('company', '=', Eval('proposed_company'))
+        ], required=True
     )
     proposed_allowance = fields.Numeric('Proposed Allowance', required=True)
     proposed_doj = fields.Date('Proposed Date of Joining', required=True)
