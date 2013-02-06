@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<tree string="Languages">
+<tree string="Languages" editable="bottom">
     <field name="language"/>
     <field name="mother_tounge"/>
     <field name="read"/>

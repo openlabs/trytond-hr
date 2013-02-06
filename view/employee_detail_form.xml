@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<form string="Staff Detail">
+<form string="Employee Detail">
     <group string="Main Info" id="main_info" col="2" yfill="1">
         <label name="name"/>
         <field name="name"/>
@@ -50,7 +50,7 @@
             <field name="contact_mechanisms" colspan="2"/>
         </page>
         <page string="Language Skills" id="language_skills">
-            <field name="language_skills"/>
+            <field name="language_skills" colspan="4"/>
         </page>
         <page string="Secular Details" id="secular_details">
             <label name="religion"/>
@@ -80,6 +80,10 @@
         </page>
         <page string="Promotions and Transfers" id="transfers">
             <field name="transfers" colspan="4"/>
+        </page>
+        <page string="Payment Details" id="payment_details">
+            <field name="payment_details" mode="form,tree" colspan="4"
+                view_ids="hr.payment_detail_view_form,hr.payment_detail_view_list"/>
         </page>
     </notebook>
 </form>

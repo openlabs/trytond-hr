@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<tree string="Payment Details">
+    <field name="payment_mode"/>
+    <field name="payment_date"/>
+    <field name="active"/>
+</tree>

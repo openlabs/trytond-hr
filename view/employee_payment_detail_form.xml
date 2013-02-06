@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<form string="Payment Detail" col="6">
+    <label name="payment_mode"/>
+    <field name="payment_mode"/>
+    <label name="payment_date"/>
+    <field name="payment_date"/>
+    <label name="active"/>
+    <field name="active"/>
+    <group string="Bank Details" id="bank_details" colspan="3" col="2">
+        <label name="bank_code"/>
+        <field name="bank_code"/>
+        <label name="bank_branch_code"/>
+        <field name="bank_branch_code"/>
+        <label name="bank_account_name"/>
+        <field name="bank_account_name"/>
+        <label name="payable_at_name"/>
+        <field name="payable_at_name"/>
+    </group>
+    <group string="Payment Return Details" id="return_details" colspan="3" yfill="1" col="2">
+        <label name="return_date"/>
+        <field name="return_date"/>
+        <label name="return_reason"/>
+        <field name="return_reason"/>
+    </group>
+</form>
