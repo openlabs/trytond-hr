@@ -7,16 +7,19 @@
 """
 from trytond.model import ModelView, ModelSQL, fields
 from trytond.pyson import Eval, Bool
-from trytond.pool import Pool
+from trytond.pool import Pool, PoolMeta
+
 __all__ = [
-    'Department', 'Responsibility', 'Language', 'Academic',
-    'EmployeeDetail', 'Skill', 'Team', 'TransferProposal', 'TransferRemark',
+    'Department', 'Employee', 'Responsibility', 'Language', 'Academic',
+    'Skill', 'Team', 'TransferProposal', 'TransferRemark',
     'PaymentDetail',
 ]
 
 STATES = {
     'readonly': ~Eval('active', True),
 }
+
+__metaclass__ = PoolMeta
 
 
 class Department(ModelView, ModelSQL):
@@ -59,15 +62,10 @@ class Department(ModelView, ModelSQL):
         return True
 
 
-class EmployeeDetail(ModelSQL, ModelView):
-    "Employee Detail"
-    __name__ = "company.employee.detail"
+class Employee:
+    "Employee"
+    __name__ = "company.employee"
 
-    name = fields.Many2One('company.employee', 'Name', required=True) # TODO: One2One
-    party = fields.Function(
-        fields.Many2One('party.party', 'Party', on_change_with=['name']),
-        'get_party',
-    )
     photo = fields.Binary('Photo')
     state = fields.Selection([
             ('current', 'Current'),
@@ -183,9 +181,6 @@ class EmployeeDetail(ModelSQL, ModelView):
     def default_marital_status():
         return 'single'
 
-    def get_party(self, name):
-        return self.name.party.id
-
     def get_addresses(self, name):
         """
         Return all the addresses of the party as the address of the employee
@@ -201,9 +196,6 @@ class EmployeeDetail(ModelSQL, ModelView):
 
         for record in records:
             Party.write([record.party], {'addresses': value})
-
-    def on_change_with_party(self):
-        return self.name.party.id
 
     def get_contact_mechanisms(self, name):
         """
@@ -229,7 +221,7 @@ class TransferProposal(ModelSQL, ModelView):
     _rec_name = 'employee'
 
     employee = fields.Many2One(
-        'company.employee.detail', 'Employee', required=True
+        'company.employee', 'Employee', required=True
     )
     proposed_company = fields.Many2One(
         'company.company', 'Proposed Company', required=True
@@ -281,7 +273,7 @@ class Responsibility(ModelSQL, ModelView):
     __name__ = "company.employee.responsibility"
 
     employee = fields.Many2One(
-        'company.employee.detail', 'Employee', required=True,
+        'company.employee', 'Employee', required=True,
     )
     name = fields.Char('Name', required=True)
     description = fields.Text('Description')
@@ -292,7 +284,7 @@ class Team(ModelSQL, ModelView):
     __name__ = "company.employee.team"
 
     employee = fields.Many2One(
-        'company.employee.detail', 'Employee', required=True,
+        'company.employee', 'Employee', required=True,
     )
     name = fields.Char('Name', required=True)
     description = fields.Text('Description')
@@ -303,7 +295,7 @@ class Language(ModelSQL, ModelView):
     __name__ = "company.employee.language"
 
     employee = fields.Many2One(
-        'company.employee.detail', 'Employee', required=True,
+        'company.employee', 'Employee', required=True,
     )
     language = fields.Many2One(
         'ir.lang', 'Language', required=True,
@@ -328,7 +320,7 @@ class Skill(ModelSQL, ModelView):
     __name__ = "company.employee.skill"
 
     employee = fields.Many2One(
-        'company.employee.detail', 'Employee', required=True,
+        'company.employee', 'Employee', required=True,
     )
     name = fields.Char('Name', required=True)
 
@@ -338,7 +330,7 @@ class Academic(ModelSQL, ModelView):
     __name__ = "company.employee.academic"
 
     employee = fields.Many2One(
-        'company.employee.detail', 'Employee', required=True,
+        'company.employee', 'Employee', required=True,
     )
     institution = fields.Char('Institution', required=True)
     major = fields.Char('Major', required=True)
@@ -352,7 +344,7 @@ class PaymentDetail(ModelSQL, ModelView):
     "Payment Detail"
     __name__ = 'company.employee.payment_detail'
 
-    employee = fields.Many2One('company.employee.detail', 'Employee', required=True)
+    employee = fields.Many2One('company.employee', 'Employee', required=True)
     active = fields.Boolean('Active')
     payment_mode = fields.Selection([
             ('cash', 'Cash'),

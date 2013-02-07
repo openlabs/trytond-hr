@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<data>
+    <xpath expr="/form/label[@name='party']" position="before">
+        <group string="Main Info" id="main_info" col="2" yfill="1">
+            <label name="party"/>
+            <field name="party"/>
+            <label name="company"/>
+            <field name="company"/>
+            <label name="state"/>
+            <field name="state"/>
+            <label name="employee_id"/>
+            <field name="employee_id"/>
+        </group>
+        <group string="Photo" id="photo" col="2">
+            <field name="photo" img_width="200" img_height="200"
+                height="200" width="200" widget="image"/>
+        </group>
+        <notebook>
+            <page string="General" id="general" col="6">
+                <label name="first_name"/>
+                <field name="first_name"/>
+                <label name="middle_name"/>
+                <field name="middle_name"/>
+                <label name="last_name"/>
+                <field name="last_name"/>
+                <label name="manager"/>
+                <field name="manager"/>
+            </page>
+            <page string="Personal" id="personal" col="6">
+                <label name="sex"/>
+                <field name="sex"/>
+                <label name="date_of_birth"/>
+                <field name="date_of_birth"/>
+                <label name="place_of_birth"/>
+                <field name="place_of_birth"/>
+                <label name="marital_status"/>
+                <field name="marital_status"/>
+                <label name="wedding_date"/>
+                <field name="wedding_date"/>
+                <label name="marriage_license"/>
+                <field name="marriage_license"/>
+                <label name="nationality"/>
+                <field name="nationality"/>
+                <label name="native_state"/>
+                <field name="native_state"/>
+            </page>
+            <page string="Address" id="address">
+                <label name="permanent_address"/>
+                <field name="permanent_address"/>
+                <label name="present_address"/>
+                <field name="present_address"/>
+                <field name="addresses" colspan="2"/>
+                <field name="contact_mechanisms" colspan="2"/>
+            </page>
+            <page string="Language Skills" id="language_skills">
+                <field name="language_skills" colspan="4"/>
+            </page>
+            <page string="Secular Details" id="secular_details">
+                <label name="religion"/>
+                <field name="religion"/>
+                <label name="denomination"/>
+                <field name="denomination"/>
+            </page>
+            <page string="Documents" id="documents">
+                <label name="driving_license"/>
+                <field name="driving_license"/>
+                <label name="driving_license_validity"/>
+                <field name="driving_license_validity"/>
+                <label name="passport_number"/>
+                <field name="passport_number"/>
+                <label name="passport_validity"/>
+                <field name="passport_validity"/>
+            </page>
+            <page string="Academics" id="academics">
+                <field name="academics"/>
+            </page>
+            <page string="Skills" id="skills">
+                <field name="skills"/>
+            </page>
+            <page string="Membership" id="membership">
+                <field name="responsibilities"/>
+                <field name="team"/>
+            </page>
+            <page string="Promotions and Transfers" id="transfers">
+                <field name="transfers" colspan="4"/>
+            </page>
+            <page string="Payment Details" id="payment_details">
+                <field name="payment_details" mode="form,tree" colspan="4"
+                    view_ids="hr.payment_detail_view_form,hr.payment_detail_view_list"/>
+            </page>
+        </notebook>
+    </xpath>
+    <xpath expr="/form/label[@name='party']" position="replace"/>
+    <xpath expr="/form/field[@name='party']" position="replace"/>
+    <xpath expr="/form/label[@name='company']" position="replace"/>
+    <xpath expr="/form/field[@name='company']" position="replace"/>
+</data>

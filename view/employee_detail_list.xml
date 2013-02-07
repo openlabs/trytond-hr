@@ -1,6 +1,0 @@
-<?xml version="1.0"?>
-<tree string="Staff Details">
-    <field name="name"/>
-    <field name="state"/>
-    <field name="sex"/>
-</tree>
