@@ -30,33 +30,12 @@
         <menuitem parent="company.menu_company_tree" sequence="30"
             action="act_department_form" id="menu_department_form"/>
 
-        <record model="ir.ui.view" id="employee_detail_view_list">
-            <field name="model">company.employee.detail</field>
-            <field name="type">tree</field>
-            <field name="priority">10</field>
-            <field name="name">employee_detail_list</field>
-        </record>
-        <record model="ir.ui.view" id="employee_detail_view_form">
-            <field name="model">company.employee.detail</field>
+        <record model="ir.ui.view" id="employee_view_form">
+            <field name="model">company.employee</field>
             <field name="type">form</field>
-            <field name="name">employee_detail_form</field>
+            <field name="inherit" ref="company.employee_view_form2"/>
+            <field name="name">employee_form</field>
         </record>
-        <record model="ir.action.act_window" id="act_employee_detail_form">
-            <field name="name">Employee Details</field>
-            <field name="res_model">company.employee.detail</field>
-        </record>
-        <record model="ir.action.act_window.view" id="act_employee_detail_form_view1">
-            <field name="sequence" eval="10"/>
-            <field name="view" ref="employee_detail_view_list"/>
-            <field name="act_window" ref="act_employee_detail_form"/>
-        </record>
-        <record model="ir.action.act_window.view" id="act_employee_detail_form_view2">
-            <field name="sequence" eval="20"/>
-            <field name="view" ref="employee_detail_view_form"/>
-            <field name="act_window" ref="act_employee_detail_form"/>
-        </record>
-        <menuitem parent="company.menu_employee_form" sequence="30"
-            action="act_employee_detail_form" id="menu_employee_detail_form"/>
 
         <record model="ir.ui.view" id="language_view_list">
             <field name="model">company.employee.language</field>
