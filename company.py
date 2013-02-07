@@ -9,8 +9,9 @@ from trytond.model import ModelView, ModelSQL, fields
 from trytond.pyson import Eval, Bool
 from trytond.pool import Pool
 __all__ = [
-    'Department', 'Responsibility', 'Language', 'Academics',
-    'StaffDetails', 'Skill', 'Team', 'TransferProposal', 'TransferRemark',
+    'Department', 'Responsibility', 'Language', 'Academic',
+    'EmployeeDetail', 'Skill', 'Team', 'TransferProposal', 'TransferRemark',
+    'PaymentDetail',
 ]
 
 STATES = {
@@ -58,81 +59,11 @@ class Department(ModelView, ModelSQL):
         return True
 
 
-class Responsibility(ModelSQL, ModelView):
-    "Responsibility"
-    __name__ = "company.employee.responsibility"
+class EmployeeDetail(ModelSQL, ModelView):
+    "Employee Detail"
+    __name__ = "company.employee.detail"
 
-    employee = fields.Many2One(
-        'company.employee', 'Employee', required=True,
-    )
-    name = fields.Char('Name', required=True)
-    description = fields.Text('Description')
-
-
-class Team(ModelSQL, ModelView):
-    "Team"
-    __name__ = "company.employee.team"
-
-    employee = fields.Many2One(
-        'company.employee', 'Employee', required=True,
-    )
-    name = fields.Char('Name', required=True)
-    description = fields.Text('Description')
-
-
-class Language(ModelSQL, ModelView):
-    "Language"
-    __name__ = "company.employee.language"
-
-    employee = fields.Many2One(
-        'company.employee', 'Employee', required=True,
-    )
-    language = fields.Many2One(
-        'ir.lang', 'Language', required=True,
-    )
-    mother_tounge = fields.Boolean('Mother Tounge')
-    read = fields.Boolean('Read')
-    write = fields.Boolean('Write')
-    speak = fields.Boolean('Speak')
-
-    @classmethod
-    def __setup__(cls):
-        super(Language, cls).__setup__()
-        cls._sql_constraints = [
-            ('code_uniq', 'UNIQUE(employee, language)',
-             'Employee should have unique language')
-        ]
-
-
-class Skill(ModelSQL, ModelView):
-    "Skill"
-    __name__ = "company.employee.skill"
-
-    employee = fields.Many2One(
-        'company.employee', 'Employee', required=True,
-    )
-    name = fields.Char('Name', required=True)
-
-
-class Academics(ModelSQL, ModelView):
-    "Academics"
-    __name__ = "company.employee.academics"
-
-    employee = fields.Many2One(
-        'company.employee', 'Employee', required=True,
-    )
-    institution = fields.Char('Institution', required=True)
-    major = fields.Char('Major', required=True)
-    level = fields.Char('Level')
-    year = fields.Integer('Year', required=True)
-    percentage = fields.Numeric('Percentage', digits=(2, 2), required=True)
-
-
-class StaffDetails(ModelSQL, ModelView):
-    "Staff Details"
-    __name__ = "company.employee.staff_details"
-
-    name = fields.Many2One('company.employee', 'Name', required=True)
+    name = fields.Many2One('company.employee', 'Name', required=True) # TODO: One2One
     party = fields.Function(
         fields.Many2One('party.party', 'Party', on_change_with=['name']),
         'get_party',
@@ -148,7 +79,11 @@ class StaffDetails(ModelSQL, ModelView):
     middle_name = fields.Char('Middle Name')
     last_name = fields.Char('Last Name', required=True)
     employee_id = fields.Char('Employee ID', readonly=True)
-    manager = fields.Many2One('company.employee', 'Manager')
+    manager = fields.Many2One(
+        'company.employee', 'Manager',
+        domain=[('id', '!=', Eval('id'))],
+        depends=['id'],
+    )
     permanent_address = fields.Many2One(
         'party.address', 'Permanent Address', required=True,
         domain=[('party', '=', Eval('party'))],
@@ -217,7 +152,7 @@ class StaffDetails(ModelSQL, ModelView):
         states={'required': Bool(Eval('passport_number'))},
     )
     academics = fields.One2Many(
-        'company.employee.academics', 'employee', 'Academics'
+        'company.employee.academic', 'employee', 'Academics'
     )
     skills = fields.One2Many(
         'company.employee.skill', 'employee', 'Skills'
@@ -231,6 +166,9 @@ class StaffDetails(ModelSQL, ModelView):
     transfers = fields.One2Many(
         'employee.transfer.proposal', 'employee',
         'Promotion / Transfer Proposals'
+    )
+    payment_details = fields.One2Many(
+        'company.employee.payment_detail', 'employee', 'Payment Details'
     )
 
     @staticmethod
@@ -291,15 +229,15 @@ class TransferProposal(ModelSQL, ModelView):
     _rec_name = 'employee'
 
     employee = fields.Many2One(
-        'company.employee.staff_details', 'Employee', required=True
+        'company.employee.detail', 'Employee', required=True
     )
     proposed_company = fields.Many2One(
         'company.company', 'Proposed Company', required=True
     )
     proposed_department = fields.Many2One(
         'company.department', 'Proposed Department', domain=[
-            ('company', '=', Eval('proposed_company'))
-        ], required=True
+            ('company', '=', Eval('proposed_company')),
+        ], required=True, depends=['proposed_company']
     )
     proposed_allowance = fields.Numeric('Proposed Allowance', required=True)
     proposed_doj = fields.Date('Proposed Date of Joining', required=True)
@@ -336,3 +274,104 @@ class TransferRemark(ModelSQL, ModelView):
     def default_date():
         Date = Pool().get('ir.date')
         return Date.today()
+
+
+class Responsibility(ModelSQL, ModelView):
+    "Responsibility"
+    __name__ = "company.employee.responsibility"
+
+    employee = fields.Many2One(
+        'company.employee.detail', 'Employee', required=True,
+    )
+    name = fields.Char('Name', required=True)
+    description = fields.Text('Description')
+
+
+class Team(ModelSQL, ModelView):
+    "Team"
+    __name__ = "company.employee.team"
+
+    employee = fields.Many2One(
+        'company.employee.detail', 'Employee', required=True,
+    )
+    name = fields.Char('Name', required=True)
+    description = fields.Text('Description')
+
+
+class Language(ModelSQL, ModelView):
+    "Language"
+    __name__ = "company.employee.language"
+
+    employee = fields.Many2One(
+        'company.employee.detail', 'Employee', required=True,
+    )
+    language = fields.Many2One(
+        'ir.lang', 'Language', required=True,
+    )
+    mother_tounge = fields.Boolean('Mother Tounge')
+    read = fields.Boolean('Read')
+    write = fields.Boolean('Write')
+    speak = fields.Boolean('Speak')
+
+    @classmethod
+    def __setup__(cls):
+        super(Language, cls).__setup__()
+        cls._sql_constraints = [
+            ('employee_language_uniq', 'UNIQUE(employee, language)',
+             'Employee should have unique language')
+        ]
+        # TODO: The should only be one mother tounge
+
+
+class Skill(ModelSQL, ModelView):
+    "Skill"
+    __name__ = "company.employee.skill"
+
+    employee = fields.Many2One(
+        'company.employee.detail', 'Employee', required=True,
+    )
+    name = fields.Char('Name', required=True)
+
+
+class Academic(ModelSQL, ModelView):
+    "Academic"
+    __name__ = "company.employee.academic"
+
+    employee = fields.Many2One(
+        'company.employee.detail', 'Employee', required=True,
+    )
+    institution = fields.Char('Institution', required=True)
+    major = fields.Char('Major', required=True)
+    level = fields.Char('Level')
+    year = fields.Integer('Year', required=True)
+    percentage = fields.Numeric('Percentage', digits=(2, 2), required=True)
+
+
+
+class PaymentDetail(ModelSQL, ModelView):
+    "Payment Detail"
+    __name__ = 'company.employee.payment_detail'
+
+    employee = fields.Many2One('company.employee.detail', 'Employee', required=True)
+    active = fields.Boolean('Active')
+    payment_mode = fields.Selection([
+            ('cash', 'Cash'),
+            ('cheque', 'Cheque'),
+            ('bank', 'Bank'),
+        ], 'Payment Mode',
+    )
+    payment_date = fields.Date('Payment Date')
+    bank_code = fields.Char('Bank Code')
+    bank_branch_code = fields.Char('Bank Branch Code')
+    bank_account_name = fields.Char('Bank Account Name')
+    payable_at_name = fields.Char('Payable at Name')
+    return_date = fields.Date('Return Date')
+    return_reason = fields.Char('Return Reason')
+
+    @staticmethod
+    def default_active():
+        return True
+
+    @staticmethod
+    def default_payment_mode():
+        return 'cash'

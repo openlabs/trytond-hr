@@ -14,16 +14,17 @@ from .attendance import *
 def register():
     Pool.register(
         Department,
+        EmployeeDetail,
         Responsibility,
         Language,
-        Academics,
+        Academic,
         Skill,
         Team,
         TransferProposal,
         TransferRemark,
-        StaffDetails,
         PayrollPeriod,
         PayrollHoliday,
         Attendance,
         AttendanceSummary,
+        PaymentDetail,
         module='hr', type_='model')
