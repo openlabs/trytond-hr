@@ -5,6 +5,9 @@
     :copyright: (c) 2013 by Openlabs Technologies & Consulting (P) Limited
     :license: BSD, see LICENSE for more details.
 """
+from dateutil.relativedelta import relativedelta
+from datetime import datetime
+
 from trytond.model import ModelView, ModelSQL, fields
 from trytond.pyson import Eval, Bool
 from trytond.pool import Pool, PoolMeta
@@ -106,6 +109,12 @@ class Employee:
         ], 'Sex', required=True
     )
     date_of_birth = fields.Date('Date of Birth', required=True)
+
+    # TODO: Not implemented for death
+    age = fields.Function(
+        fields.Char('Age', on_change_with=['date_of_birth']),
+        'get_age'
+    )
     place_of_birth = fields.Char('Place of Birth', required=True)
     marital_status = fields.Selection([
             ('single', 'Single'),
@@ -213,6 +222,20 @@ class Employee:
 
         for record in records:
             Party.write([record.party], {'contact_mechanisms': value})
+
+    def get_age(self, name=None):
+        """
+        Retrun age of employee
+        """
+        now = datetime.now()
+        delta = relativedelta(now, self.date_of_birth)
+        years_months_days = str(delta.years) + 'y ' + str(delta.months) + \
+                'm ' + str(delta.days) + 'd'
+        return years_months_days
+
+    def on_change_with_age(self):
+        if self.date_of_birth:
+            return self.get_age()
 
 
 class TransferProposal(ModelSQL, ModelView):
