@@ -88,6 +88,9 @@
                 <field name="payment_details" mode="form,tree" colspan="4"
                     view_ids="hr.payment_detail_view_form,hr.payment_detail_view_list"/>
             </page>
+            <page name="history">
+                <field name="history"/>
+            </page>
         </notebook>
     </xpath>
     <xpath expr="/form/label[@name='party']" position="replace"/>

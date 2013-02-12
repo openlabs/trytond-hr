@@ -26,5 +26,7 @@ def register():
         Attendance,
         AttendanceSummary,
         PaymentDetail,
+        Party,
         Employee,
+        EmployeeHistory,
         module='hr', type_='model')
