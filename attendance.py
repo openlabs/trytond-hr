@@ -5,11 +5,12 @@
     :copyright: (c) 2013 by Openlabs Technologies & Consulting (P) Limited
     :license: BSD, see LICENSE for more details.
 """
-from trytond.model import ModelView, ModelSQL, fields
+from trytond.model import ModelView, ModelSQL, Workflow, fields
 from trytond.pool import Pool
+from trytond.pyson import Eval
 
 __all__ = [
-    'Attendance', 'AttendanceSummary',
+    'Attendance', 'AttendanceSummary', 'LeaveApplication',
 ]
 
 
@@ -110,3 +111,94 @@ class AttendanceSummary(ModelSQL, ModelView):
     full_days = fields.Integer('Full Days')
     half_days = fields.Integer('Half Days')
     leaves = fields.Numeric('Leaves Taken')
+
+
+class LeaveApplication(Workflow, ModelSQL, ModelView):
+    "Leave Application"
+    __name__ = 'employee.leave.application'
+
+    from_date = fields.Date('From Date', required=True, select=True,
+        states={'readonly': Eval('state') != 'Draft'}, depends=['state']
+    )
+    to_date = fields.Date('To Date', required=True, select=True,
+        states={'readonly': Eval('state') != 'Draft'}, depends=['state']
+    )
+    employee = fields.Many2One(
+        'company.employee', 'Employee', required=True, select=True,
+        states={'readonly': Eval('state') != 'Draft'}, depends=['state']
+    )
+    reason = fields.Text('Reason',
+        states={'readonly': Eval('state') != 'Draft'}, depends=['state']
+    )
+    type = fields.Selection([
+        ('full_day', 'Full Day'),
+        ('first_half', 'First Half'),
+        ('second_half', 'Second Half')
+    ], 'Type', required=True,
+        states={'readonly': Eval('state') != 'Draft'}, depends=['state']
+    )
+    state = fields.Selection([
+        ('Draft', 'Draft'),
+        ('In Review', 'In Review'),
+        ('Approved', 'Approved'),
+        ('Denied', 'Denied')
+    ], 'State', readonly=True, required=True)
+
+    @staticmethod
+    def default_state():
+        return 'Draft'
+
+    @staticmethod
+    def default_type():
+        return 'full_day'
+
+    @classmethod
+    def __setup__(cls):
+        super(LeaveApplication, cls).__setup__()
+        cls._order.insert(0, ('from_date', 'DESC'))
+        cls._transitions |= set((
+            ('Draft', 'In Review'),
+            ('In Review', 'Approved'),
+            ('In Review', 'Denied'),
+        ))
+        cls._buttons.update({
+            'review': {
+                'invisible': Eval('state') != 'Draft',
+            },
+            'approve': {
+                'invisible': Eval('state') != 'In Review',
+            },
+            'deny': {
+                'invisible': Eval('state') != 'In Review',
+            }
+        })
+        cls._error_messages.update({
+            'wrong_type': \
+                'Type cannot be half day if from and to dates are not same'
+        })
+
+    def check_type(self):
+        'Type cannot be half day if from and to dates are not same'
+        if self.from_date != self.to_date and self.type != 'full_day':
+            return False
+        return True
+
+    @classmethod
+    @ModelView.button
+    @Workflow.transition('In Review')
+    def review(cls, apps):
+        for app in apps:
+            if not app.check_type():
+                cls.raise_user_error('wrong_type')
+
+    @classmethod
+    @ModelView.button
+    @Workflow.transition('Approved')
+    def approve(cls, apps):
+        pass
+
+    @classmethod
+    @ModelView.button
+    @Workflow.transition('Denied')
+    def deny(cls, apps):
+        pass

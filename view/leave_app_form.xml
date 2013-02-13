@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<form string="Leave Application">
+    <label name="employee"/>
+    <field name="employee"/>
+    <label name="type"/>
+    <field name="type"/>
+    <label name="from_date"/>
+    <field name="from_date"/>
+    <label name="to_date"/>
+    <field name="to_date"/>
+    <separator name="reason" colspan="4"/>
+    <field name="reason" colspan="4"/>
+    <group col="3" colspan="4" id="leave_app_buttons">
+        <button name="review" string="Apply"
+            icon="tryton-executable" />
+        <button name="approve" string="Approve"
+            icon="tryton-ok" />
+        <button name="deny" string="Deny"
+            icon="tryton-cancel" />
+    </group>
+    <label name="state"/>
+    <field name="state" colspan="3"/>
+</form>
+

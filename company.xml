@@ -97,5 +97,26 @@
             <field name="name">employee_transfer_remark_form</field>
         </record>
 
+        <record model="ir.action.act_window" id="act_transfer_proposal_list">
+            <field name="name">Promotion &amp; Transfer Proposals</field>
+            <field name="res_model">employee.transfer.proposal</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_transfer_proposal_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="transfer_proposal_view_list"/>
+            <field name="act_window" ref="act_transfer_proposal_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_transfer_proposal_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="transfer_proposal_view_form"/>
+            <field name="act_window" ref="act_transfer_proposal_list"/>
+        </record>
+
+        <menuitem name="Promotion &amp; Transfer Proposals" parent="menu_hr"
+            sequence="10" id="menu_hr_transfer_proposal" />
+
+        <menuitem parent="menu_hr_transfer_proposal" sequence="10"
+            action="act_transfer_proposal_list" id="menu_hr_transfer_proposal_list"/>
+
     </data>
 </tryton>

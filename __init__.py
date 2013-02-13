@@ -25,6 +25,9 @@ def register():
         PayrollHoliday,
         Attendance,
         AttendanceSummary,
+        LeaveApplication,
         PaymentDetail,
+        Party,
         Employee,
+        EmployeeHistory,
         module='hr', type_='model')
