@@ -76,6 +76,10 @@ class Employee:
     __name__ = "company.employee"
     _history = True
 
+    department = fields.Many2One(
+        'company.department', 'Department', required=True,
+        domain=[('company', '=', Eval('company'))]
+    )
     photo = fields.Binary('Photo')
     state = fields.Selection([
             ('current', 'Current'),

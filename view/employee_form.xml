@@ -6,6 +6,8 @@
             <field name="party"/>
             <label name="company"/>
             <field name="company"/>
+            <label name="department"/>
+            <field name="department"/>
             <label name="state"/>
             <field name="state"/>
             <label name="employee_id"/>
