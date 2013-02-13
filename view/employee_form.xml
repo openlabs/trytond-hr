@@ -27,8 +27,6 @@
                 <field name="last_name"/>
                 <label name="manager"/>
                 <field name="manager"/>
-            </page>
-            <page string="Personal" id="personal" col="6">
                 <label name="sex"/>
                 <field name="sex"/>
                 <newline/>
