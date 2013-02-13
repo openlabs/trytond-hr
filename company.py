@@ -410,19 +410,25 @@ class TransferProposal(Workflow, ModelSQL, ModelView):
     @classmethod
     @ModelView.button
     @Workflow.transition('In Review')
-    def review(cls, apps):
+    def review(cls, proposals):
         pass
 
     @classmethod
     @ModelView.button
     @Workflow.transition('Approved')
-    def approve(cls, apps):
-        pass
+    def approve(cls, proposals):
+        Employee = Pool().get('company.employee')
+
+        for proposal in proposals:
+            Employee.write([proposal.employee], {
+                'company': proposal.proposed_company.id,
+                'department': proposal.proposed_department.id,
+            })
 
     @classmethod
     @ModelView.button
     @Workflow.transition('Rejected')
-    def reject(cls, apps):
+    def reject(cls, proposals):
         pass
 
 
