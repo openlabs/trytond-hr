@@ -6,6 +6,8 @@
             <field name="party"/>
             <label name="company"/>
             <field name="company"/>
+            <label name="department"/>
+            <field name="department"/>
             <label name="state"/>
             <field name="state"/>
             <label name="employee_id"/>
@@ -29,8 +31,11 @@
             <page string="Personal" id="personal" col="6">
                 <label name="sex"/>
                 <field name="sex"/>
+                <newline/>
                 <label name="date_of_birth"/>
                 <field name="date_of_birth"/>
+                <label name="age"/>
+                <field name="age"/>
                 <label name="place_of_birth"/>
                 <field name="place_of_birth"/>
                 <label name="marital_status"/>
