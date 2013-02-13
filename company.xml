@@ -118,5 +118,15 @@
         <menuitem parent="menu_hr_transfer_proposal" sequence="10"
             action="act_transfer_proposal_list" id="menu_hr_transfer_proposal_list"/>
 
+        <record model="ir.sequence.type" id="sequence_type_employee">
+            <field name="name">Employee</field>
+            <field name="code">company.employee</field>
+        </record>
+
+        <record model="ir.sequence" id="sequence_employee">
+            <field name="name">Employee</field>
+            <field name="code">company.employee</field>
+        </record>
+
     </data>
 </tryton>

@@ -9,6 +9,7 @@ from trytond.pool import Pool
 from .company import *
 from .payroll import *
 from .attendance import *
+from .configuration import *
 
 
 def register():
@@ -28,6 +29,7 @@ def register():
         LeaveApplication,
         PaymentDetail,
         Party,
+        Configuration,
         Employee,
         EmployeeHistory,
         module='hr', type_='model')

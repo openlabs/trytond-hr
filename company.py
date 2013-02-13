@@ -11,6 +11,7 @@ from datetime import datetime
 
 from trytond.pyson import Eval, Bool
 from trytond.pool import Pool, PoolMeta
+from trytond.transaction import Transaction
 
 __all__ = [
     'Department', 'Employee', 'Responsibility', 'Language', 'Academic',
@@ -203,6 +204,20 @@ class Employee:
     @staticmethod
     def default_marital_status():
         return 'single'
+
+    @staticmethod
+    def default_company():
+        return Transaction().context.get('company')
+
+    @classmethod
+    def create(cls, values):
+        Sequence = Pool().get('ir.sequence')
+        Configuration = Pool().get('company.employee.configuration')
+
+        values = values.copy()
+        config = Configuration(1)
+        values['employee_id'] = Sequence.get_id(config.employee_sequence.id)
+        return super(Employee, cls).create(values)
 
     def get_addresses(self, name):
         """
