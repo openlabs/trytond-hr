@@ -5,4 +5,5 @@
     <field name="proposed_department"/>
     <field name="proposed_allowance"/>
     <field name="proposed_doj"/>
+    <field name="state"/>
 </tree>
