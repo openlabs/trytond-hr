@@ -5,7 +5,7 @@
     :copyright: (c) 2013 by Openlabs Technologies & Consulting (P) Limited
     :license: BSD, see LICENSE for more details.
 """
-from trytond.model import ModelView, ModelSQL, fields
+from trytond.model import ModelView, ModelSQL, Workflow, fields
 from trytond.pyson import Eval, Bool
 from trytond.pool import Pool, PoolMeta
 
@@ -328,7 +328,7 @@ class EmployeeHistory(ModelSQL, ModelView):
             % Employee._table, [])
 
 
-class TransferProposal(ModelSQL, ModelView):
+class TransferProposal(Workflow, ModelSQL, ModelView):
     "Employee Promotion and Transfer Proposal"
     __name__ = 'employee.transfer.proposal'
     _rec_name = 'employee'
@@ -349,6 +349,54 @@ class TransferProposal(ModelSQL, ModelView):
     remarks = fields.One2Many(
         'employee.transfer.remark', 'proposal', 'Remarks'
     )
+    state = fields.Selection([
+        ('Draft', 'Draft'),
+        ('In Review', 'In Review'),
+        ('Approved', 'Approved'),
+        ('Rejected', 'Rejected')
+    ], 'State', readonly=True, required=True)
+
+    @staticmethod
+    def default_state():
+        return 'Draft'
+
+    @classmethod
+    def __setup__(cls):
+        super(TransferProposal, cls).__setup__()
+        cls._transitions |= set((
+            ('Draft', 'In Review'),
+            ('In Review', 'Approved'),
+            ('In Review', 'Rejected'),
+        ))
+        cls._buttons.update({
+            'review': {
+                'invisible': Eval('state') != 'Draft',
+            },
+            'approve': {
+                'invisible': Eval('state') != 'In Review',
+            },
+            'reject': {
+                'invisible': Eval('state') != 'In Review',
+            }
+        })
+
+    @classmethod
+    @ModelView.button
+    @Workflow.transition('In Review')
+    def review(cls, apps):
+        pass
+
+    @classmethod
+    @ModelView.button
+    @Workflow.transition('Approved')
+    def approve(cls, apps):
+        pass
+
+    @classmethod
+    @ModelView.button
+    @Workflow.transition('Rejected')
+    def reject(cls, apps):
+        pass
 
 
 class TransferRemark(ModelSQL, ModelView):
