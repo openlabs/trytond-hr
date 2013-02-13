@@ -11,6 +11,7 @@ from datetime import datetime
 from trytond.model import ModelView, ModelSQL, fields
 from trytond.pyson import Eval, Bool
 from trytond.pool import Pool, PoolMeta
+from trytond.transaction import Transaction
 
 __all__ = [
     'Department', 'Employee', 'Responsibility', 'Language', 'Academic',
@@ -203,6 +204,10 @@ class Employee:
     @staticmethod
     def default_marital_status():
         return 'single'
+
+    @staticmethod
+    def default_company():
+        return Transaction().context.get('company')
 
     def get_addresses(self, name):
         """
