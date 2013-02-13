@@ -209,6 +209,16 @@ class Employee:
     def default_company():
         return Transaction().context.get('company')
 
+    @classmethod
+    def create(cls, values):
+        Sequence = Pool().get('ir.sequence')
+        Configuration = Pool().get('company.employee.configuration')
+
+        values = values.copy()
+        config = Configuration(1)
+        values['employee_id'] = Sequence.get_id(config.employee_sequence.id)
+        return super(Employee, cls).create(values)
+
     def get_addresses(self, name):
         """
         Return all the addresses of the party as the address of the employee
