@@ -172,9 +172,6 @@ class LeaveApplication(Workflow, ModelSQL, ModelView):
                 'invisible': Eval('state') != 'In Review',
             }
         })
-        cls._constraints += [
-            ('check_type', 'wrong_type'),
-        ]
         cls._error_messages.update({
             'wrong_type': \
                 'Type cannot be half day if from and to dates are not same'
@@ -190,7 +187,9 @@ class LeaveApplication(Workflow, ModelSQL, ModelView):
     @ModelView.button
     @Workflow.transition('In Review')
     def review(cls, apps):
-        pass
+        for app in apps:
+            if not app.check_type():
+                cls.raise_user_error('wrong_type')
 
     @classmethod
     @ModelView.button
