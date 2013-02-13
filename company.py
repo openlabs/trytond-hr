@@ -5,7 +5,10 @@
     :copyright: (c) 2013 by Openlabs Technologies & Consulting (P) Limited
     :license: BSD, see LICENSE for more details.
 """
-from trytond.model import ModelView, ModelSQL, fields
+from trytond.model import ModelView, ModelSQL, Workflow, fields
+from dateutil.relativedelta import relativedelta
+from datetime import datetime
+
 from trytond.pyson import Eval, Bool
 from trytond.pool import Pool, PoolMeta
 
@@ -73,6 +76,10 @@ class Employee:
     __name__ = "company.employee"
     _history = True
 
+    department = fields.Many2One(
+        'company.department', 'Department', required=True,
+        domain=[('company', '=', Eval('company'))]
+    )
     photo = fields.Binary('Photo')
     state = fields.Selection([
             ('current', 'Current'),
@@ -113,6 +120,12 @@ class Employee:
         ], 'Sex', required=True
     )
     date_of_birth = fields.Date('Date of Birth', required=True)
+
+    # TODO: Not implemented for death
+    age = fields.Function(
+        fields.Char('Age', on_change_with=['date_of_birth']),
+        'get_age'
+    )
     place_of_birth = fields.Char('Place of Birth', required=True)
     marital_status = fields.Selection([
             ('single', 'Single'),
@@ -224,6 +237,20 @@ class Employee:
         for record in records:
             Party.write([record.party], {'contact_mechanisms': value})
 
+    def get_age(self, name=None):
+        """
+        Retrun age of employee
+        """
+        now = datetime.now()
+        delta = relativedelta(now, self.date_of_birth)
+        years_months_days = str(delta.years) + 'y ' + str(delta.months) + \
+                'm ' + str(delta.days) + 'd'
+        return years_months_days
+
+    def on_change_with_age(self):
+        if self.date_of_birth:
+            return self.get_age()
+
 
 class EmployeeHistory(ModelSQL, ModelView):
     "Employee History"
@@ -328,7 +355,7 @@ class EmployeeHistory(ModelSQL, ModelView):
             % Employee._table, [])
 
 
-class TransferProposal(ModelSQL, ModelView):
+class TransferProposal(Workflow, ModelSQL, ModelView):
     "Employee Promotion and Transfer Proposal"
     __name__ = 'employee.transfer.proposal'
     _rec_name = 'employee'
@@ -349,6 +376,60 @@ class TransferProposal(ModelSQL, ModelView):
     remarks = fields.One2Many(
         'employee.transfer.remark', 'proposal', 'Remarks'
     )
+    state = fields.Selection([
+        ('Draft', 'Draft'),
+        ('In Review', 'In Review'),
+        ('Approved', 'Approved'),
+        ('Rejected', 'Rejected')
+    ], 'State', readonly=True, required=True)
+
+    @staticmethod
+    def default_state():
+        return 'Draft'
+
+    @classmethod
+    def __setup__(cls):
+        super(TransferProposal, cls).__setup__()
+        cls._transitions |= set((
+            ('Draft', 'In Review'),
+            ('In Review', 'Approved'),
+            ('In Review', 'Rejected'),
+        ))
+        cls._buttons.update({
+            'review': {
+                'invisible': Eval('state') != 'Draft',
+            },
+            'approve': {
+                'invisible': Eval('state') != 'In Review',
+            },
+            'reject': {
+                'invisible': Eval('state') != 'In Review',
+            }
+        })
+
+    @classmethod
+    @ModelView.button
+    @Workflow.transition('In Review')
+    def review(cls, proposals):
+        pass
+
+    @classmethod
+    @ModelView.button
+    @Workflow.transition('Approved')
+    def approve(cls, proposals):
+        Employee = Pool().get('company.employee')
+
+        for proposal in proposals:
+            Employee.write([proposal.employee], {
+                'company': proposal.proposed_company.id,
+                'department': proposal.proposed_department.id,
+            })
+
+    @classmethod
+    @ModelView.button
+    @Workflow.transition('Rejected')
+    def reject(cls, proposals):
+        pass
 
 
 class TransferRemark(ModelSQL, ModelView):
