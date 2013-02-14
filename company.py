@@ -79,7 +79,8 @@ class Employee:
 
     department = fields.Many2One(
         'company.department', 'Department', required=True,
-        domain=[('company', '=', Eval('company'))]
+        domain=[('company', '=', Eval('company'))],
+        depends=['company']
     )
     photo = fields.Binary('Photo')
     state = fields.Selection([
