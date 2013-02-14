@@ -193,6 +193,51 @@ class Employee:
     history = fields.One2Many('company.employee.history', 'employee',
         'History', readonly=True
     )
+    attendance = fields.One2Many(
+        'employee.attendance', 'employee', 'Attendance'
+    )
+    type = fields.Selection([
+        ('probation', 'Probation'),
+        ('confirmed', 'Confirmed')
+    ], 'Type', required=True)
+
+    current_payrollyear = fields.Function(
+        fields.Many2One('payroll.year', 'Current Payroll Year'),
+        'get_current_payrollyear'
+    )
+    leave_applications = fields.One2Many(
+        'employee.leave.application', 'employee', 'Leave Applications'
+    )
+    available_cl = fields.Function(
+        fields.Integer('Available Casual Leaves'), 'get_available_cl'
+    )
+    available_sl = fields.Function(
+        fields.Integer('Available Sick Leaves'), 'get_available_sl'
+    )
+    available_el = fields.Function(
+        fields.Integer('Available Earned Leaves'), 'get_available_el'
+    )
+    available_dl = fields.Function(
+        fields.Integer('Available Study Leaves'), 'get_available_dl'
+    )
+    available_pl = fields.Function(
+        fields.Integer('Available Paternity Leaves'), 'get_available_pl'
+    )
+    available_al = fields.Function(
+        fields.Integer('Available Annual Leaves'), 'get_available_al'
+    )
+
+    @classmethod
+    def __setup__(cls):
+        super(Employee, cls).__setup__()
+        cls._error_messages.update({
+            'payrollyear_not_found': \
+                'Payroll Year not found for today!',
+        })
+
+    @staticmethod
+    def default_type():
+        return 'confirmed'
 
     @staticmethod
     def default_state():
@@ -220,11 +265,119 @@ class Employee:
         values['employee_id'] = Sequence.get_id(config.employee_sequence.id)
         return super(Employee, cls).create(values)
 
+    def get_current_payrollyear(self, name):
+        PayrollYear = Pool().get('payroll.year')
+        Date = Pool().get('ir.date')
+
+        date = Date.today()
+        years = PayrollYear.search([
+            ('state', '=', 'open'),
+            ('start_date', '<=', date),
+            ('end_date', '>=', date),
+        ])
+        if not years or len(years) > 1:
+            self.raise_user_error('payrollyear_not_found')
+
+        return years[0].id
+
     def get_addresses(self, name):
         """
         Return all the addresses of the party as the address of the employee
         """
         return map(int, self.party.addresses)
+
+    def calculate_leaves(self, type):
+        """Calculate leaves as per given type
+
+        :param type: Type for which leaves have to be calculated
+        """
+        leaves = 0
+        for attendance in self.attendance:
+            if attendance.date >= self.current_payrollyear.start_date \
+                    and attendance.date <= self.current_payrollyear.end_date:
+                if attendance.on_leave and \
+                        attendance.leave_application.leave_type == type:
+                    leaves += 1
+
+        return leaves
+
+    def get_available_cl(self, name):
+        "Calculate remaining casual leaves in current payroll year"
+        LeaveConfig = Pool().get('employee.leave.configuration')
+
+        config = LeaveConfig(1)
+        cl_taken = self.calculate_leaves('casual')
+        if self.type == 'probation':
+            allowed_cl = config.probation_cl or 0
+        else:
+            allowed_cl = config.confirmed_cl or 0
+
+        return allowed_cl - cl_taken
+
+    def get_available_sl(self, name):
+        "Calculate remaining sick leaves in current payroll year"
+        LeaveConfig = Pool().get('employee.leave.configuration')
+
+        config = LeaveConfig(1)
+        sl_taken = self.calculate_leaves('sick')
+        if self.type == 'probation':
+            allowed_sl = config.probation_sl or 0
+        else:
+            allowed_sl = config.confirmed_sl or 0
+
+        return allowed_sl - sl_taken
+
+    def get_available_el(self, name):
+        "Calculate remaining earned leaves in current payroll year"
+        LeaveConfig = Pool().get('employee.leave.configuration')
+
+        config = LeaveConfig(1)
+        el_taken = self.calculate_leaves('earned')
+        if self.type == 'probation':
+            allowed_el = config.probation_el or 0
+        else:
+            allowed_el = config.confirmed_el or 0
+
+        return allowed_el - el_taken
+
+    def get_available_dl(self, name):
+        "Calculate remaining study leaves in current payroll year"
+        LeaveConfig = Pool().get('employee.leave.configuration')
+
+        config = LeaveConfig(1)
+        dl_taken = self.calculate_leaves('study')
+        if self.type == 'probation':
+            allowed_dl = config.probation_dl or 0
+        else:
+            allowed_dl = config.confirmed_dl or 0
+
+        return allowed_dl - dl_taken
+
+    def get_available_pl(self, name):
+        "Calculate remaining paternity leaves in current payroll year"
+        LeaveConfig = Pool().get('employee.leave.configuration')
+
+        config = LeaveConfig(1)
+        pl_taken = self.calculate_leaves('paternity')
+        if self.type == 'probation':
+            allowed_pl = config.probation_pl or 0
+        else:
+            allowed_pl = config.confirmed_pl or 0
+
+        return allowed_pl - pl_taken
+
+    def get_available_al(self, name):
+        "Calculate remaining annual leaves in current payroll year"
+        LeaveConfig = Pool().get('employee.leave.configuration')
+
+        config = LeaveConfig(1)
+        al_taken = self.calculate_leaves('annual')
+        if self.type == 'probation':
+            allowed_al = config.probation_al or 0
+        else:
+            allowed_al = config.confirmed_al or 0
+
+        return allowed_al - al_taken
 
     @classmethod
     def set_addresses(cls, records, name, value=None):

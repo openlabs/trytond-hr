@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <tree string="Leave Applications">
     <field name="employee"/>
-    <field name="type"/>
+    <field name="leave_type"/>
     <field name="from_date"/>
     <field name="to_date"/>
     <field name="state"/>

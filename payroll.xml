@@ -2,6 +2,34 @@
 <tryton>
     <data>
 
+        <!-- Payroll Years -->
+        <record model="ir.ui.view" id="payroll_year_view_list">
+            <field name="model">payroll.year</field>
+            <field name="type">tree</field>
+            <field name="priority">10</field>
+            <field name="name">payroll_year_list</field>
+        </record>
+        <record model="ir.ui.view" id="payroll_year_view_form">
+            <field name="model">payroll.year</field>
+            <field name="type">form</field>
+            <field name="priority">20</field>
+            <field name="name">payroll_year_form</field>
+        </record>
+        <record model="ir.action.act_window" id="act_payroll_year_list">
+            <field name="name">Payroll Years</field>
+            <field name="res_model">payroll.year</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_payroll_year_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="payroll_year_view_list"/>
+            <field name="act_window" ref="act_payroll_year_list"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_payroll_year_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="payroll_year_view_form"/>
+            <field name="act_window" ref="act_payroll_year_list"/>
+        </record>
+
         <!-- Payroll Periods -->
         <record model="ir.ui.view" id="payroll_period_view_list">
             <field name="model">payroll.period</field>
@@ -36,6 +64,9 @@
             sequence="10" id="menu_hr_configuration" />
 
         <menuitem parent="menu_hr_configuration" sequence="10"
+            action="act_payroll_year_list" id="menu_payroll_years"/>
+
+        <menuitem parent="menu_payroll_years" sequence="10"
             action="act_payroll_period_list" id="menu_payroll_periods"/>
 
         <!-- Payroll Holidays -->

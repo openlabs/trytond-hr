@@ -1,8 +1,9 @@
 <?xml version="1.0"?>
 <tree string="Attendance">
-    <!--<field name="date"/>-->
+    <field name="date"/>
     <field name="employee"/>
     <field name="is_holiday"/>
+    <field name="on_leave"/>
     <field name="in_time"/>
     <field name="out_time"/>
 </tree>

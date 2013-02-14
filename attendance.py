@@ -5,6 +5,9 @@
     :copyright: (c) 2013 by Openlabs Technologies & Consulting (P) Limited
     :license: BSD, see LICENSE for more details.
 """
+from datetime import timedelta
+from time import strftime
+
 from trytond.model import ModelView, ModelSQL, Workflow, fields
 from trytond.pool import Pool
 from trytond.pyson import Eval
@@ -14,6 +17,11 @@ __all__ = [
 ]
 
 
+def daterange(start_date, end_date):
+    for n in range(int ((end_date - start_date).days)):
+        yield start_date + timedelta(n)
+
+
 class Attendance(ModelSQL, ModelView):
     'Attendance'
     __name__ = 'employee.attendance'
@@ -21,7 +29,9 @@ class Attendance(ModelSQL, ModelView):
     employee = fields.Many2One(
         'company.employee', 'Employee', required=True, select=True
     )
-    date = fields.Date('Date', required=True, select=True)
+    date = fields.Date('Date', required=True, select=True, states={
+        'invisible': ~Eval('on_leave') == True,
+    }, depends=['on_leave'])
     period = fields.Function(
         fields.Many2One('payroll.period', 'Period', depends=['date']),
         'get_period'
@@ -32,8 +42,20 @@ class Attendance(ModelSQL, ModelView):
     )
 
     # Make these fields as Time fields which seems to be broken somehow
-    in_time = fields.DateTime('In time')
-    out_time = fields.DateTime('Out time')
+    in_time = fields.DateTime('In time', states={
+        'invisible': ~Eval('on_leave') != True,
+    }, depends=['on_leave'], on_change=['in_time'])
+    out_time = fields.DateTime('Out time', states={
+        'invisible': ~Eval('on_leave') != True,
+    }, depends=['on_leave'])
+    on_leave = fields.Boolean('On Leave')
+    leave_application = fields.Many2One(
+        'employee.leave.application', 'Leave Application',
+        states={
+            'invisible': ~Eval('on_leave') == True,
+            'required': ~Eval('on_leave') != True,
+        }, depends=['on_leave']
+    )
 
     @staticmethod
     def default_date():
@@ -76,6 +98,10 @@ class Attendance(ModelSQL, ModelView):
             return False
         return True
 
+    def on_change_in_time(self):
+        if self.in_time:
+            return {'date': self.in_time.date()}
+
     def get_period(self, name):
         Period = Pool().get('payroll.period')
 
@@ -93,7 +119,11 @@ class Attendance(ModelSQL, ModelView):
         if not self.period:
             return False
         holidays = [holiday.date for holiday in self.period.holidays]
-        if self.in_time.date() in holidays:
+        if self.on_leave:
+            date = self.date
+        else:
+            date = self.in_time.date()
+        if date in holidays:
             return True
         return False
 
@@ -137,6 +167,16 @@ class LeaveApplication(Workflow, ModelSQL, ModelView):
     ], 'Type', required=True,
         states={'readonly': Eval('state') != 'Draft'}, depends=['state']
     )
+    leave_type = fields.Selection([
+        ('casual', 'Casual Leave'),
+        ('Sick', 'Sick Leave'),
+        ('earned', 'earned Leave'),
+        ('study', 'Study Leave'),
+        ('paternity', 'Paternity Leave'),
+        ('annual', 'Annual Leave')
+    ], 'Leave Type', required=True,
+        states={'readonly': Eval('state') != 'Draft'}, depends=['state']
+    )
     state = fields.Selection([
         ('Draft', 'Draft'),
         ('In Review', 'In Review'),
@@ -174,12 +214,12 @@ class LeaveApplication(Workflow, ModelSQL, ModelView):
         })
         cls._error_messages.update({
             'wrong_type': \
-                'Type cannot be half day if from and to dates are not same'
+                'OOPS! Half day leaves are not implemented yet'
         })
 
     def check_type(self):
         'Type cannot be half day if from and to dates are not same'
-        if self.from_date != self.to_date and self.type != 'full_day':
+        if self.type != 'full_day':
             return False
         return True
 
@@ -195,7 +235,15 @@ class LeaveApplication(Workflow, ModelSQL, ModelView):
     @ModelView.button
     @Workflow.transition('Approved')
     def approve(cls, apps):
-        pass
+        Attendance = Pool().get('employee.attendance')
+        for app in apps:
+            for single_date in daterange(app.from_date, app.to_date):
+                Attendance.create({
+                    'employee': app.employee.id,
+                    'date': single_date,
+                    'on_leave': True,
+                    'leave_application': app.id
+                })
 
     @classmethod
     @ModelView.button

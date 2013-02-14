@@ -10,6 +10,11 @@
     <field name="end_date"/>
     <separator name="holidays" colspan="4"/>
     <field name="holidays" colspan="4"/>
+    <group colspan="4" id="buttons">
+        <button name="close" string="Close Payroll Period"
+            icon="tryton-readonly" confirm="Are you sure to close payroll period?"/>
+        <button name="reopen" string="Re-Open Payroll Period" icon="tryton-clear"/>
+    </group>
     <label name="state"/>
     <field name="state" colspan="3"/>
 </form>

@@ -29,5 +29,57 @@
                 search="[('model.model', '=', 'company.employee.configuration'), ('name', '=', 'employee_sequence')]"/>
             <field name="value" eval="'ir.sequence,' + str(ref('sequence_employee'))"/>
         </record>
+
+        <!-- Leave Configuration -->
+        <record model="ir.ui.view" id="employee_leave_configuration_view_form">
+            <field name="model">employee.leave.configuration</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <![CDATA[
+                <form string="Employee Leave Configuration">
+                    <separator id="sepr_probation" string="Probation Staff" colspan="4"/>
+                    <label name="probation_cl"/>
+                    <field name="probation_cl"/>
+                    <label name="probation_sl"/>
+                    <field name="probation_sl"/>
+                    <label name="probation_el"/>
+                    <field name="probation_el"/>
+                    <label name="probation_dl"/>
+                    <field name="probation_dl"/>
+                    <label name="probation_pl"/>
+                    <field name="probation_pl"/>
+                    <label name="probation_al"/>
+                    <field name="probation_al"/>
+                    <separator id="sepr_confirmed" string="Confirmed Staff" colspan="4"/>
+                    <label name="confirmed_cl"/>
+                    <field name="confirmed_cl"/>
+                    <label name="confirmed_sl"/>
+                    <field name="confirmed_sl"/>
+                    <label name="confirmed_el"/>
+                    <field name="confirmed_el"/>
+                    <label name="confirmed_dl"/>
+                    <field name="confirmed_dl"/>
+                    <label name="confirmed_pl"/>
+                    <field name="confirmed_pl"/>
+                    <label name="confirmed_al"/>
+                    <field name="confirmed_al"/>
+                </form>
+                ]]>
+            </field>
+        </record>
+        <record model="ir.action.act_window" id="act_employee_leave_configuration_form">
+            <field name="name">Employee Leave Configuration</field>
+            <field name="res_model">employee.leave.configuration</field>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_employee_leave_configuration_view1">
+            <field name="sequence" eval="1"/>
+            <field name="view" ref="employee_leave_configuration_view_form"/>
+            <field name="act_window" ref="act_employee_leave_configuration_form"/>
+        </record>
+
+       <menuitem parent="menu_hr_configuration" sequence="10"
+            action="act_employee_leave_configuration_form" id="menu_leave_config"/> 
+
     </data>
 </tryton>

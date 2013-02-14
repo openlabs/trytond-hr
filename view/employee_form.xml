@@ -12,6 +12,8 @@
             <field name="state"/>
             <label name="employee_id"/>
             <field name="employee_id"/>
+            <label name="type"/>
+            <field name="type"/>
         </group>
         <group string="Photo" id="photo" col="2">
             <field name="photo" img_width="200" img_height="200"
@@ -90,6 +92,30 @@
             <page string="Payment Details" id="payment_details">
                 <field name="payment_details" mode="form,tree" colspan="4"
                     view_ids="hr.payment_detail_view_form,hr.payment_detail_view_list"/>
+            </page>
+            <page string="Attendance" id="attendance">
+                <field name="attendance" colspan="4"/>
+            </page>
+            <page string="Leaves" id="leaves">
+                <label name="current_payrollyear"/>
+                <field name="current_payrollyear"/>
+                <newline/>
+                <group id="group_leaves" string="Leaves" col="6">
+                    <label name="available_cl"/>
+                    <field name="available_cl"/>
+                    <label name="available_sl"/>
+                    <field name="available_sl"/>
+                    <label name="available_el"/>
+                    <field name="available_el"/>
+                    <label name="available_dl"/>
+                    <field name="available_dl"/>
+                    <label name="available_pl"/>
+                    <field name="available_pl"/>
+                    <label name="available_al"/>
+                    <field name="available_al"/>
+                </group>
+                <newline/>
+                <field name="leave_applications" colspan="4"/>
             </page>
             <page name="history">
                 <field name="history"/>
