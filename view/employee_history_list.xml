@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<tree string="Employee History">
+    <field name="date"/>
+    <field name="user"/>
+    <field name="party"/>
+</tree>
