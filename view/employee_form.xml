@@ -118,7 +118,7 @@
                 <newline/>
                 <field name="leave_applications" colspan="4"/>
             </page>
-            <page name="history">
+            <page name="history" id="history">
                 <field name="history"/>
             </page>
         </notebook>
