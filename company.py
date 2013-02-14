@@ -433,6 +433,9 @@ class EmployeeHistory(ModelSQL, ModelView):
     company = fields.Many2One(
         'company.company', 'Company', datetime_field='date'
     )
+    department = fields.Many2One(
+        'company.department', 'Department', datetime_field='date'
+    )
     photo = fields.Binary('Photo')
     state = fields.Selection([
             ('current', 'Current'),

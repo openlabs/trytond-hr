@@ -136,6 +136,7 @@
         <record model="ir.ui.view" id="employee_history_view_form">
             <field name="model">company.employee.history</field>
             <field name="type">form</field>
+            <field name="inherit" ref="company.employee_view_form2"/>
             <field name="name">employee_history_form</field>
         </record>
 
