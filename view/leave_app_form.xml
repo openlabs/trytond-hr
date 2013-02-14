@@ -2,8 +2,8 @@
 <form string="Leave Application">
     <label name="employee"/>
     <field name="employee"/>
-    <label name="type"/>
-    <field name="type"/>
+    <label name="leave_type"/>
+    <field name="leave_type"/>
     <label name="from_date"/>
     <field name="from_date"/>
     <label name="to_date"/>

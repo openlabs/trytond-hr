@@ -1,9 +1,10 @@
 <?xml version="1.0"?>
-<tree string="Payroll Periods">
+<tree string="Payroll Years">
     <field name="name"/>
-    <field name="payroll_year"/>
+    <field name="company"/>
     <field name="department"/>
     <field name="start_date"/>
     <field name="end_date"/>
     <field name="state"/>
 </tree>
+
