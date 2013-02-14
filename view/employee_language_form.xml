@@ -5,11 +5,11 @@
     <label name="mother_tounge"/>
     <field name="mother_tounge"/>
     <group id="check boxes" col="6" colspan="4">
-        <label name="read"/>
-        <field name="read"/>
-        <label name="write"/>
-        <field name="write"/>
-        <label name="speak"/>
-        <field name="speak"/>
+        <label name="can_read"/>
+        <field name="can_read"/>
+        <label name="can_write"/>
+        <field name="can_write"/>
+        <label name="can_speak"/>
+        <field name="can_speak"/>
     </group>
 </form>

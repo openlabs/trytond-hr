@@ -1,9 +1,10 @@
 <?xml version="1.0"?>
 <data>
     <xpath expr="/form/label[@name='party']" position="before">
-        <group string="Main Info" id="main_info" col="2" yfill="1">
+        <group string="Main Info" id="main_info" col="4" yfill="1">
             <label name="party"/>
             <field name="party"/>
+            <newline/>
             <label name="company"/>
             <field name="company"/>
             <label name="department"/>
