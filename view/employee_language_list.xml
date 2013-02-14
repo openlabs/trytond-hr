@@ -2,7 +2,7 @@
 <tree string="Languages" editable="bottom">
     <field name="language"/>
     <field name="mother_tounge"/>
-    <field name="read"/>
-    <field name="write"/>
-    <field name="speak"/>
+    <field name="can_read"/>
+    <field name="can_write"/>
+    <field name="can_speak"/>
 </tree>

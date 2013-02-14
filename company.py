@@ -511,9 +511,9 @@ class Language(ModelSQL, ModelView):
         'ir.lang', 'Language', required=True,
     )
     mother_tounge = fields.Boolean('Mother Tounge')
-    read = fields.Boolean('Read')
-    write = fields.Boolean('Write')
-    speak = fields.Boolean('Speak')
+    can_read = fields.Boolean('Can Read?')
+    can_write = fields.Boolean('Can Write?')
+    can_speak = fields.Boolean('Can Speak?')
 
     @classmethod
     def __setup__(cls):
